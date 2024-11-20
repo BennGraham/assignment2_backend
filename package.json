@@ -1,4 +1,9 @@
 {
+  "name": "comp3123-express-backend",
+  "version": "1.0.0",
+  "description": "Comp3123 Express MongoDB Backend",
+  "main": "index.js",
+  "author": "Benn Graham",
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "express": "^4.21.1",
