@@ -6,10 +6,12 @@ const path = require("path");
 const cors = require("cors");
 require("dotenv").config();
 
+const app = express();
+
 app.use(
   cors({
     origin: [
-      "101412278-comp-3123-assignment1.vercel.app",
+      "101412278-comp-3123-assignment2.vercel.app",
       "http://localhost:3000",
     ],
     methods: ["GET", "POST", "PUT", "DELETE"],
@@ -29,30 +31,10 @@ mongoose
     console.error(e);
   });
 
-const app = express();
-
 const SERVER_PORT = 3000;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-// Security headers - adjust as needed for your React frontend
-app.use((req, res, next) => {
-  res.setHeader(
-    "Content-Security-Policy",
-    "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' *",
-  );
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "GET, POST, OPTIONS, PUT, DELETE",
-  );
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept",
-  );
-  next();
-});
 
 // Routes
 app.use("/api/v1", employeesRoutes);
@@ -68,19 +50,6 @@ app.get("/", (req, res) => {
   res.json({ message: "API is running" });
 });
 
-// Error handling middleware
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ message: "error - status: 500" });
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${SERVER_PORT}`);
 });
-
-// For local development
-if (process.env.NODE_ENV !== "production") {
-  const PORT = process.env.PORT || 3000;
-  app.listen(PORT, () => {
-    console.log(`Server running at http://localhost:${SERVER_PORT}/`);
-  });
-}
-
-// export app for Vercel deployment
-module.exports = app;
