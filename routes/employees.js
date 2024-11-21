@@ -4,7 +4,7 @@ const { body, validationResult } = require("express-validator");
 const routes = express.Router();
 
 // Get all employees
-routes.get("/emp/employees", async (_, res) => {
+routes.get("/employees", async (_, res) => {
   try {
     const employees = await EmployeeModel.find();
     res.status(200).json(employees);
@@ -15,7 +15,7 @@ routes.get("/emp/employees", async (_, res) => {
 
 // Create new employee
 routes.post(
-  "/emp/employees",
+  "/employees",
   [
     body("first_name")
       .notEmpty()
@@ -55,9 +55,9 @@ routes.post(
 );
 
 // Get employee by id
-routes.get("/emp/employees/:eid", async (req, res) => {
+routes.get("/employees/:id", async (req, res) => {
   try {
-    const employee = await EmployeeModel.findById(req.params.eid);
+    const employee = await EmployeeModel.findById(req.params.id);
     if (!employee) {
       return res.status(404).json({ message: "Employee not found" });
     }
@@ -69,7 +69,7 @@ routes.get("/emp/employees/:eid", async (req, res) => {
 
 // Update employee information
 routes.put(
-  "/emp/employees/:eid",
+  "/employees/:id",
   [
     body("first_name")
       .optional()
@@ -91,8 +91,8 @@ routes.put(
       return res.status(400).json({ errors: errors.array() });
     }
     try {
-      const employeeId = req.params.eid;
-      const { eid, ...updateData } = req.body;
+      const employeeId = req.params.id;
+      const { id, ...updateData } = req.body;
 
       const updatedEmployee = await EmployeeModel.findByIdAndUpdate(
         employeeId,
@@ -123,11 +123,9 @@ routes.put(
 );
 
 // Delete employee by id
-routes.delete("/emp/employees", async (req, res) => {
+routes.delete("/employees/:id", async (req, res) => {
   try {
-    const deletedEmployee = await EmployeeModel.findByIdAndDelete(
-      req.query.eid,
-    );
+    const deletedEmployee = await EmployeeModel.findByIdAndDelete(req.query.id);
     if (!deletedEmployee) {
       return res.status(404).json({ message: "Employee not found" });
     }
