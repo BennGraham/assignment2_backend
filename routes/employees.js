@@ -51,7 +51,7 @@ routes.post(
     } catch (error) {
       res.status(400).json({ message: error.message });
     }
-  },
+  }
 );
 
 // Get employee by id
@@ -100,7 +100,7 @@ routes.put(
           ...updateData,
           updated_at: new Date(),
         },
-        { new: true, runValidators: true },
+        { new: true, runValidators: true }
       );
 
       if (!updatedEmployee) {
@@ -119,7 +119,7 @@ routes.put(
       }
       res.status(500).json({ message: "Internal Server Error" });
     }
-  },
+  }
 );
 
 // Delete employee by id
@@ -134,6 +134,27 @@ routes.delete("/employees/:id", async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
+  }
+});
+
+// Search/filter employees by name, department, or position
+routes.get("/search", async (req, res) => {
+  const searchTerm = req.query.q ? req.query.q.toLowerCase() : "";
+
+  try {
+    const employees = await EmployeeModel.find({
+      $or: [
+        { first_name: { $regex: searchTerm, $options: "i" } },
+        { last_name: { $regex: searchTerm, $options: "i" } },
+        { department: { $regex: searchTerm, $options: "i" } },
+        { position: { $regex: searchTerm, $options: "i" } },
+      ],
+    });
+
+    res.status(200).json(employees);
+  } catch (error) {
+    console.error("Error searching employees:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 });
 
