@@ -16,14 +16,11 @@ app.use(
     ],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
-  }),
+  })
 );
 
 mongoose
-  .connect(process.env.MONGODB_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+  .connect(process.env.MONGODB_URI)
   .then(() => {
     console.log("Connected to MongoDB");
   })
@@ -31,7 +28,7 @@ mongoose
     console.error(e);
   });
 
-const SERVER_PORT = 3000;
+const SERVER_PORT = process.env.PORT || 8080;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -39,11 +36,6 @@ app.use(express.urlencoded({ extended: true }));
 // Routes
 app.use("/api/v1", employeesRoutes);
 app.use("/api/v1", usersRoutes);
-
-// Root
-app.route("/").get((req, res) => {
-  res.sendFile(path.join(__dirname, "../public", "index.html"));
-});
 
 // API health check
 app.get("/", (req, res) => {

@@ -1,8 +1,13 @@
+require("dotenv").config();
 const express = require("express");
 const bcrypt = require("bcryptjs");
 const UserModel = require("../models/users");
+const jwt = require("jsonwebtoken");
 const { body, validationResult } = require("express-validator");
 const routes = express.Router();
+
+const JWT_SECRET = process.env.JWT_SECRET;
+console.log("JWT_SECRET:", JWT_SECRET);
 
 // Sign up new user
 routes.post(
@@ -58,7 +63,7 @@ routes.post(
         .status(500)
         .json({ message: "Internal server error", error: error.message });
     }
-  },
+  }
 );
 
 // Login user
@@ -100,13 +105,23 @@ routes.post(
           .json({ status: false, message: "Incorrect password" });
       }
 
+      const token = jwt.sign({ id: user._id, email: user.email }, JWT_SECRET, {
+        expiresIn: "1h",
+      });
+
       res.status(200).json({
         message: "Login successful.",
+        token,
+        user: {
+          id: user._id,
+          username: user.username,
+          email: user.email,
+        },
       });
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
-  },
+  }
 );
 
 module.exports = routes;
