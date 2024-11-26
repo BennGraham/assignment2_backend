@@ -20,10 +20,12 @@ const employeeSchema = new mongoose.Schema({
   salary: {
     type: Number,
   },
-  date_of_joining: Date,
+  date_of_joining: {
+    type: Date,
+    default: Date.now,
+  },
   department: {
     type: String,
-    default: Date.now,
   },
   created_at: {
     type: Date,

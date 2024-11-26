@@ -123,7 +123,7 @@ routes.put(
 );
 
 // Delete employee by id
-routes.delete("/employees/:id", async (req, res) => {
+routes.delete("/employees", async (req, res) => {
   try {
     const deletedEmployee = await EmployeeModel.findByIdAndDelete(req.query.id);
     if (!deletedEmployee) {
